@@ -217,7 +217,20 @@ Some planned improvements include:
 
 This project demonstrates how Artificial Intelligence can make recruitment more transparent, efficient, and candidate-friendly. By combining resume analysis, skill gap detection, job fitment prediction, rejection reasoning, and interview preparation into a single platform, the system provides end-to-end support for career development.
 
-The explainable nature of the platform allows candidates to understand not only where they stand but also how they can improve, making it a practical tool for both job seekers and recruiters.
+## Project Screenshots
+
+### Skill Gap Detection
+![Skill Gap Detection](screenshots/Module1.png)
+
+### Candidate Fitment Analysis
+![Fitment Analysis](screenshots/Module2.png)
+
+### Resume Rejection Reasoning
+![Rejection Reasoning](screenshots/Module3.png)
+
+### AI Interviewer
+![AI Interviewer](screenshots/Module4.png)
+
 
 
 
