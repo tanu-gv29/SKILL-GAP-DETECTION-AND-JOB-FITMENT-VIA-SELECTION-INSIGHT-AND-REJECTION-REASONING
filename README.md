@@ -230,6 +230,7 @@ This project demonstrates how Artificial Intelligence can make recruitment more 
 
 ### AI Interviewer
 ![AI Interviewer](screenshots/Module4.png)
+![Report](screenshots/Module4_report.png)
 
 
 
