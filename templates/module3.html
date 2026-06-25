@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='module-style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&family=Vollkorn+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+   
+</head>
+<body class="page-module3">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand"></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About us</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('interview') }}">AI Interviewer</a></li>
+                <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+            </ul>
+        </div>
+    </nav>
+   <div class="container">
+    <p class="sentence3">
+        Let me help you understand why your resume might be rejected by the company
+    </p>
+
+    <form id="gapAnalysisForm">
+
+        <!-- Resume upload (clean & correct) -->
+        <!-- rejected resume -->
+       <!-- Rejected Resume -->
+       <label for="rejectedResume" class="upload-btn resume-btn1">
+       📄 Rejected Resume
+       </label>
+       <input type="file" id="rejectedResume" name="rejected_resume" accept=".pdf,.docx" hidden>
+       <!-- Selected Resume 1 -->
+       <label for="selectedResume1" class="upload-btn resume-btn2">
+           📄 Selected Resume 1
+       </label>
+       <input type="file" id="selectedResume1" name="selected_resume" accept=".pdf,.docx" hidden>
+
+       <!-- Selected Resume 2 -->
+       <label for="selectedResume2" class="upload-btn resume-btn3">
+           📄 Selected Resume 2
+       </label>
+       <input type="file" id="selectedResume2" accept=".pdf,.docx" hidden>
+
+       <!-- Selected Resume 3 -->
+       <label for="selectedResume3" class="upload-btn resume-btn4">
+           📄 Selected Resume 3
+       </label>
+       <input type="file" id="selectedResume3" accept=".pdf,.docx" hidden>
+
+       <!-- Description / Notes Textbox -->
+       <textarea 
+           class="resume-textbox"
+           name="job_description"
+           placeholder="Paste the Job description here"
+           required></textarea>
+
+
+       <!-- Analyze Button -->
+       <button type="button" class="submit analyze-btn" onclick="analyzeRejection()">
+            Analyze Rejection Reason
+       </button>
+    </form>
+</div>
+
+<script>
+    async function analyzeRejection() {
+    const formData = new FormData();
+    
+    const rejected = document.getElementById("rejectedResume").files[0];
+    const selected = document.getElementById("selectedResume1").files[0];
+    const jd = document.querySelector("textarea[name='job_description']").value;
+    // 🔹 Extract job role from JD (Role: XXXX)
+let extractedRole = null;
+
+const roleMatch = jd.match(/Role\s*:\s*(.+)/i);
+
+if (roleMatch && roleMatch[1]) {
+    extractedRole = roleMatch[1].trim();
+} else {
+    extractedRole = "General Technical Role";
+}
+    if (!rejected || !selected || !jd.trim()) {
+        alert("Please upload both resumes and job description");
+        return;
+    }
+    
+    // Show loading
+    document.querySelector(".analyze-btn").innerHTML = "Analyzing...";
+    
+    formData.append("rejected_resume", rejected);
+    formData.append("selected_resume", selected);
+    formData.append("job_description", jd);
+    
+    try {
+        const response = await fetch("/api/rejection-analysis", {
+            method: "POST",
+            body: formData
+        });
+        
+        const data = await response.json();
+        console.log("FULL RESPONSE FROM BACKEND:", data);
+        if (data.error) {
+            alert("Error: " + data.error);
+            return;
+        }
+        
+        // Store result
+        // tell dashboard this is module 3
+localStorage.setItem("activeModule", "module3");
+
+// store module 3 result
+localStorage.setItem("rejectionResult", JSON.stringify(data));
+
+// store interview info for later
+localStorage.setItem(
+  "interviewContext",
+  JSON.stringify({
+    source: "module3"
+  })
+);
+
+// go to dashboard FIRST
+window.location.href = "/dashboard";
+        
+    } catch (error) {
+        alert("Analysis failed: " + error.message);
+    } finally {
+        document.querySelector(".analyze-btn").innerHTML = "Analyze Rejection Reason";
+    }
+}
+
+
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+
+
+    </script>
+    
+    
+</body>
+</html>

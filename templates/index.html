@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home-style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&family=Vollkorn+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+   
+</head>
+<body class="page-home">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand"></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About us</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('interview') }}">AI Interviewer</a></li>
+               <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+            </ul>
+        </div>
+    </nav>
+
+    
+
+    <div class="container">
+        <pre class="sentence">skill gap detection and job fitment via selection insight 
+            and rejection reasoning</pre>
+        <p class="sentence2">Where questions find clarity and careers find direction</p>
+        <div class="images">
+            
+            <a href="{{ url_for('module1') }}" class="img-btn" id="btn1">
+                <img src="{{ url_for('static', filename='bg-imgs/img1.png') }}" alt="Module 1">
+            </a>
+ 
+           <a href="{{ url_for('module2') }}" class="img-btn" id="btn2">
+            <img src="{{ url_for('static', filename='bg-imgs/img3.png') }}" alt="Module 2">
+           </a>
+
+            
+           <a href="{{ url_for('module3') }}" class="img-btn" id="btn3">
+            <img src="{{ url_for('static', filename='bg-imgs/img2.png') }}" alt="Module 3">
+        </a>
+        
+
+           
+        </div>
+    </div>
+</body>
+<script>
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+</html>

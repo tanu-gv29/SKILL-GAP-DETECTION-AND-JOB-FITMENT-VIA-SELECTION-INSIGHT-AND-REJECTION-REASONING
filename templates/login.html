@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Login / Signup</title>
+
+  <style>
+     body {
+        font-family: 'Times New Roman', Times, serif;
+        min-height: 120vh;   /* TEMP test value */
+        overflow-y: auto;
+    }
+
+    .auth-box {
+      position: absolute;   /* ✅ CHANGED */
+      top: 100px;           /* 🔼 MOVE UP / DOWN */
+      left: 35%;            /* 🔄 MOVE LEFT / RIGHT */
+      width: 350px;
+      padding: 40px 40px;
+      border-radius: 12px;
+      border: 2px solid #373368;
+      background-color: #FAC5C5;
+      color: rgb(0, 0, 0);
+      margin-bottom: 140px;
+    }
+
+    .auth-box h1 {
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      width: 90%;
+      padding: 10px 15px;
+      margin: 10px 0;
+      border-radius: 25px;
+      border: 2px solid #373368;
+      background: transparent;
+      color: black;
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 25px;
+      border: 2px solid #000;
+      background: #373368;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .auth-button:hover {
+      background: #2f2b5c;
+    }
+
+    .or {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .or hr {
+      flex: 1;
+    }
+
+    .google-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 25px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .switch-text {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .switch-text span {
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+    }
+
+    /* ---------- HIDE ---------- */
+    .hidden {
+      display: none;
+    }
+
+    .flash-container {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 420px;
+  z-index: 9999;
+}
+
+.flash-message {
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.flash-message.error {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}
+
+.flash-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #badbcc;
+}
+
+    
+  </style>
+</head>
+
+<body class="page-login">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ url_for('home') }}" class="brand"></a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About us</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('interview') }}">AI Interviewer</a></li>
+            <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+        </ul>
+    </div>
+</nav>
+
+  <!-- Auth Section -->
+  <div class="content-wrapper">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- LOGIN -->
+<div class="auth-box {% if mode == 'signup' %}hidden{% endif %}" id="loginBox">
+  <h1>Log in</h1>
+  <p class="subtitle">Be interview-ready at any time with the best-fit resume</p>
+
+  <form method="POST" action="{{ url_for('login_user') }}">
+    <input type="email" name="email" class="input-field" placeholder="Email or Phone" required>
+    <input type="password" name="password" class="input-field" placeholder="Password" required>
+
+    <button type="submit" class="auth-button">Log in</button>
+  </form>
+
+  <div class="or">
+    <hr><span>or</span><hr>
+  </div>
+
+  <button class="google-btn" type="button">Sign in with Google</button>
+
+  <p class="switch-text">
+    Don’t have an account?
+    <span onclick="showSignup()">Signup</span>
+  </p>
+</div>
+
+<!-- SIGNUP -->
+<div class="auth-box {% if mode != 'signup' %}hidden{% endif %}" id="signupBox">
+  <h1>Sign up</h1>
+  <p class="subtitle">Be interview ready at anytime with best fit resume</p>
+
+  <form method="POST" action="{{ url_for('signup') }}">
+    <input type="text" name="full_name" class="input-field" placeholder="Full Name" required>
+    <input type="email" name="email" class="input-field" placeholder="Email or Phone" required>
+    <input type="password" name="password" class="input-field" placeholder="Password" required>
+    <input type="password" name="confirm_password" class="input-field" placeholder="Confirm Password" required>
+
+    <button type="submit" class="auth-button">Create Account</button>
+  </form>
+
+  <div class="or">
+    <hr><span>or</span><hr>
+  </div>
+
+  <button class="google-btn" type="button">Sign up with Google</button>
+
+  <p class="switch-text">
+    Already a user?
+    <span onclick="showLogin()">Login</span>
+  </p>
+</div>
+
+  </div>
+
+
+<script>
+  function showSignup() {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("signupBox").classList.remove("hidden");
+  }
+
+  function showLogin() {
+    document.getElementById("signupBox").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+  }
+
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+
+</script>
+
+</body>
+</html>

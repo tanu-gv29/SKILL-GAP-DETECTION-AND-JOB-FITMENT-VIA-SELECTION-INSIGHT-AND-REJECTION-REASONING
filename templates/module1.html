@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='module-style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&family=Vollkorn+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+   
+</head>
+<body class="page-module1">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand"></a>
+            <ul class="nav-links">
+               <li><a href="{{ url_for('home') }}">Home</a></li>
+               <li><a href="{{ url_for('about') }}">About us</a></li>
+               <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+               <li><a href="{{ url_for('interview') }}">AI Interviewer</a></li>
+               <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+            </ul>
+        </div>
+    </nav>
+   <div class="container">
+    <p class="sentence3">
+        This page helps you to identify the important skill you are missing you crack your interview
+    </p>
+
+    <form id="gapAnalysisForm">
+
+        <!-- Job role -->
+        <!-- <input type="text" id="jobRoleInput" class="job-role" placeholder="Select a Job Role" onclick="filterJobRoles()" readonly>
+        <div class="dropdown" id="jobRoleDropdown"></div> -->
+        <div class="job-role-wrapper">
+    <input
+        type="text"
+        id="jobRoleInput"
+        class="job-role"
+        placeholder="Select a Job Role"
+        onclick="filterJobRoles()"
+        readonly
+    >
+    <div class="dropdown" id="jobRoleDropdown"></div>
+</div>
+
+        <!-- Resume upload (clean & correct) -->
+        <label for="resume" class="upload-btn resume-btn">
+            📄 Resume upload
+        </label>
+        <input type="file" id="resume" accept=".pdf,.docx" required hidden>
+
+        <!-- Submit -->
+       <button type="button" class="submit analyze-btn" onclick="analyzeSkillGap()">
+       Analyze Skills
+       </button>
+    </form>
+
+    <div id="gapAnalysisResult"></div>
+</div>
+
+    
+
+</body>
+<script>
+async function analyzeSkillGap() {
+
+    // 1️⃣ Get inputs
+    const resumeFile = document.getElementById("resume").files[0];
+    const jobRole = document.getElementById("jobRoleInput").value;
+
+    // 2️⃣ Validation
+    if (!resumeFile || jobRole.trim() === "") {
+        alert("Please upload resume and select job role");
+        return;
+    }
+
+    // 3️⃣ Create form data
+    const formData = new FormData();
+    formData.append("resume", resumeFile);
+    formData.append("job_role", jobRole);
+
+    // 4️⃣ Send to Flask backend
+    const response = await fetch("/api/skill-gap", {
+        method: "POST",
+        body: formData
+    });
+
+    // 5️⃣ Get result
+    if (!response.ok) {
+    const err = await response.json();
+    alert(err.error || "Something went wrong");
+    return;
+    }
+
+    const result = await response.json();
+
+
+    // 6️⃣ Store result for dashboard
+    localStorage.setItem("activeModule", "module1");
+    localStorage.setItem("skillGapResult", JSON.stringify(result));
+    localStorage.removeItem("roleMatchResult"); // optional safety
+
+    window.location.href = "/dashboard";
+
+}
+let jobRoles = [];
+
+// Load job roles when page opens
+window.onload = async () => {
+    const res = await fetch("/api/job-roles");
+    jobRoles = await res.json();
+};
+
+function filterJobRoles() {
+    const input = document.getElementById("jobRoleInput");
+    const dropdown = document.getElementById("jobRoleDropdown");
+    const value = input.value.toLowerCase();
+
+    dropdown.innerHTML = "";
+    dropdown.style.display = "block";
+
+    jobRoles
+        .filter(role => role.toLowerCase().includes(value))
+        .forEach(role => {
+            const div = document.createElement("div");
+            div.className = "dropdown-item";
+            div.innerText = role;
+
+            div.onclick = () => {
+                input.value = role;
+                dropdown.style.display = "none";
+            };
+
+            dropdown.appendChild(div);
+        });
+
+    if (dropdown.innerHTML === "") {
+        dropdown.style.display = "none";
+    }
+}
+
+document.addEventListener("click", function (e) {
+    const wrapper = document.querySelector(".job-role-wrapper");
+    const dropdown = document.getElementById("jobRoleDropdown");
+
+    if (wrapper && !wrapper.contains(e.target)) {
+        dropdown.style.display = "none";
+    }
+});
+
+
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+
+</script>
+
+</html>

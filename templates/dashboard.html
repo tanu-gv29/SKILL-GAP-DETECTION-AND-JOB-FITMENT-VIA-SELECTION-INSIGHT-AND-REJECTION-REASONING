@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&display=swap" rel="stylesheet">
+     <style>
+/* module1-css */
+/* ===== MODULE 1 DASHBOARD CARD ===== */
+/* #module1Section {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr; /* text | donut | bar */
+    /* gap: 35px;
+    margin-top: 60px;
+    padding: 40px;
+}
+.module1-card { */
+    /* background: rgba(255, 255, 255, 0.88); */
+    /* border-radius: 20px;
+    padding: 25px; */
+    /* box-shadow: 0 15px 35px rgba(0,0,0,0.18); */
+/* } */
+/* .text-card h2 {
+    font-size: 30px;
+    color: #2f2f4f;
+    margin-bottom: 10px;
+}
+
+.text-card h3 {
+    margin-top: 18px;
+    font-size: 20px;
+    color: #373368;
+}
+
+.text-card ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.chart-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#jobTitle {
+    font-size: 34px;
+    font-family:'Times New Roman', Times, serif;
+    font-weight: 700;
+    color: #373368;
+    margin-bottom: 12px;
+}
+
+.dashboard-left p {
+    font-size: 17px;
+    color: #444;
+    margin-bottom: 25px;
+}
+.dashboard-left ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.dashboard-left ul li {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+#matchedSkills li {
+    background: #d7f5e5;
+    color: #1f7a4a;
+    padding: 7px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+}
+
+#missingSkills li {
+    background: #fde2e2;
+    color: #a12b2b;
+    padding: 7px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+}
+
+.dashboard-left h3 {
+    font-size: 20px;
+    margin: 20px 0 10px;
+    color: #373368;
+} */ 
+
+/* ===== MODULE 1 VISUAL POLISH ===== */
+#module1Section {
+    display: grid;
+    grid-template-columns: 1.28fr 0.92fr 0.92fr;
+    gap: 22px;
+    margin-top: 40px;
+    padding: 30px 35px 15px;
+    align-items: stretch;
+}
+
+.module1-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 10px 15px;
+}
+
+.module1-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px rgba(90, 50, 50, 0.14);
+}
+
+.text-card {
+    min-height: 460px;
+}
+
+.text-card h2,
+#jobTitle {
+    font-size: 34px;
+    line-height: 1.22;
+    color: #373368;
+    margin-bottom: 18px;
+    letter-spacing: 0.2px;
+}
+
+.text-card p,
+.dashboard-left p {
+    font-size: 18px;
+    color: #2f2f2f;
+    margin-bottom: 26px;
+}
+
+.text-card h3,
+.dashboard-left h3 {
+    font-size: 21px;
+    color: #373368;
+    margin: 26px 0 14px;
+}
+
+#matchedSkills,
+#missingSkills {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+#matchedSkills li {
+    background: linear-gradient(135deg, #dcf7e9, #c9efd9);
+    color: #1f7a4a;
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(31, 122, 74, 0.08);
+}
+
+#missingSkills li {
+    background: linear-gradient(135deg, #fde9e9, #f8d7d7);
+    color: #a12b2b;
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(161, 43, 43, 0.08);
+}
+
+.chart-card {
+    min-height: 460px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+}
+
+#donutChart,
+#barChart {
+    width: 100%;
+    max-width: 100%;
+    min-height: 360px;
+    border-radius: 20px;
+    padding: 6px;
+    margin-left: 0;
+}
+
+/* keep chart order as you already wanted */
+#module1Section .module1-card:nth-child(2) {
+    order: 3;
+}
+
+#module1Section .module1-card:nth-child(3) {
+    order: 2;
+}
+
+/* #donutChart,
+#barChart { */
+    /* background: white; */
+    /* border-radius: 16px;
+    padding: 15px;
+    margin-left: -230px;
+}
+.dashboard-wrapper {
+    align-items: stretch;
+}*/
+
+#module1Section {
+    margin-top: 40px;
+    animation: fadeInUp 0.6s ease;
+}
+
+/* .text-card {
+    background: rgba(255, 244, 244, 0.18);
+}
+
+.chart-card {
+    background: rgba(255, 244, 244, 0.08);
+} */
+
+
+
+/* ---------- DASHBOARD LAYOUT ---------- */
+/* ---------- MODULE 2 LAYOUT FIX ---------- */
+/* .module2-charts {
+    width: 100%;
+    max-width: 1100px;        
+    margin: 0 auto;          
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+} */
+
+/* Individual charts */
+/* #roleBarChart,
+#roleLollipopChart {
+    width: 100%;              
+    height: 450px;            
+    min-width: 800px;         
+}
+
+        .dashboard-wrapper {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+            padding: 120px 80px 40px;
+            align-items: start;
+        }
+
+        .dashboard-left h2 {
+            margin-bottom: 10px;
+        }
+
+        .dashboard-left ul {
+            margin-left: 20px;
+        }
+
+        .dashboard-right {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        #donutChart,
+        #barChart {
+            width: 100%;
+            max-width: 420px;
+        } */
+
+        /* ---------- MODULE 2 SECTION ---------- */
+        /* #module2Section {
+            display: none;
+            padding: 120px 80px;
+        } */
+
+/* ---------- MODULE 2 REFINED LAYOUT ---------- */
+#module2Section {
+    display: none;
+    padding: 110px 70px 40px;
+    animation: fadeInUp 0.6s ease;
+}
+
+.module2-title {
+    text-align: center;
+    font-size: 34px;
+    color: #373368;
+    margin-bottom: 30px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.module2-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    max-width: 1150px;
+    margin: 0 auto 35px auto;
+}
+
+.module2-role-card {
+    background: rgba(255, 244, 244, 0.22);
+    border: 1px solid rgba(120, 70, 70, 0.10);
+    border-radius: 24px;
+    padding: 24px 22px;
+    box-shadow: 0 8px 22px rgba(90, 50, 50, 0.06);
+    text-align: center;
+}
+
+.module2-rank {
+    font-size: 15px;
+    font-weight: 700;
+    color: #7b4b4b;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.module2-role-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #373368;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.module2-role-score {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2e7db2;
+    margin-bottom: 8px;
+}
+
+.module2-role-label {
+    font-size: 14px;
+    color: #5b4b4b;
+}
+
+.module2-chart-wrapper {
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+#roleBarChart {
+    width: 100%;
+    height: 480px;
+}
+
+
+.module2-why-title {
+    margin-top: 16px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #5e4a4a;
+}
+
+.module2-skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.module2-skill-tags span {
+    background: rgba(215, 245, 229, 0.92);
+    color: #1f7a4a;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(31, 122, 74, 0.05);
+}
+
+.module2-role-card {
+    background: rgba(255, 244, 244, 0.22);
+    border: 1px solid rgba(120, 70, 70, 0.10);
+    border-radius: 24px;
+    padding: 24px 22px;
+    box-shadow: 0 8px 22px rgba(90, 50, 50, 0.06);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: module2CardRise 0.7s ease forwards;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.module2-role-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(90, 50, 50, 0.12);
+}
+
+.module2-role-card:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+.module2-role-card:nth-child(2) {
+    animation-delay: 0.18s;
+}
+
+.module2-role-card:nth-child(3) {
+    animation-delay: 0.28s;
+}
+
+.module2-chart-wrapper {
+    max-width: 980px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: module2ChartFade 0.8s ease forwards;
+    animation-delay: 0.4s;
+}
+
+@keyframes module2CardRise {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes module2ChartFade {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+        /* ---------- BOTTOM ACTION ---------- */
+        .dashboard-bottom {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 1000;
+        }
+
+
+        .interview-btn {
+            position: static;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: 2px solid #444;
+            background-color: #D58A8A;
+            cursor: pointer;
+        }
+
+        .interview-btn:hover {
+            background-color: #c97979;
+        }
+
+        .hover-text {
+            display: none;
+        }
+
+        .hover-text-btn:hover .default-text {
+            display: none;
+        }
+
+        .hover-text-btn:hover .hover-text {
+            display: inline;
+        }
+
+        /* Hide by default */
+        /* .dashboard-wrapper,
+        #donutChart,
+        #barChart {
+            display: none;
+        } */
+        .dashboard-wrapper {
+            display: none;
+        }
+        /* ================================
+   MODULE 3 : RESUME REJECTION
+================================ */
+
+/* Module 3 section wrapper */
+#module3Section {
+    margin: 120px auto 0; 
+    max-width: 800px;
+    border: 2px solid black;
+    padding: 30px 80px;
+    /* background-color: rgba(255, 255, 255, 0.75); */
+    border-radius: 16px;
+    /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); */
+    font-family:'Times New Roman', Times, serif;
+}
+
+/* Module 3 title */
+#module3Section h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #373368;
+}
+
+/* Section headings */
+#module3Section h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #444;
+}
+
+/* Paragraphs */
+#module3Section p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+/* Lists */
+#module3Section ul {
+    margin-left: 25px;
+    margin-bottom: 15px;
+}
+
+#module3Section li {
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+/* Verdict highlight */
+#module3Section p strong {
+    color: #b34747;
+}
+
+/* Missing skills */
+#module3Section h3:nth-of-type(1) {
+    color: #b34747;
+}
+
+/* Strengths */
+#module3Section h3:nth-of-type(2) {
+    color: #2f7d32;
+}
+
+/* Recommendations */
+#module3Section h3:nth-of-type(3) {
+    color: #1f4fd8;
+}
+
+/* Smooth appearance */
+#module3Section {
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.module3-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0 30px 0;
+    flex-wrap: wrap;
+}
+
+.module3-tab {
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid #7b5a5a;
+    background: rgba(255, 244, 244, 0.85);
+    color: #373368;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.module3-tab.active {
+    background: #373368;
+    color: white;
+}
+
+.module3-tab-panel {
+    animation: fadeInUp 0.35s ease;
+}
+
+.shap-note {
+    text-align: center;
+    margin: 10px 0 14px 0;
+    font-size: 14px;
+    color: #4a5568;
+    font-style: italic;
+}
+
+
+    </style>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    
+</head>
+
+<body class="page-dashboard">
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{{ url_for('home') }}" class="brand"></a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About us</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('interview') }}">AI Interviewer</a></li>
+            <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+        </ul>
+    </div>
+</nav>
+
+<!-- MODULE 1 -->
+<!-- <div class="dashboard-wrapper" id="module1Section">
+    <div class="dashboard-left">
+        <h2 id="jobTitle"></h2>
+        <p><strong>Job Role:</strong> <span id="jobRole"></span></p>
+
+        <h3>Matched Skills</h3>
+        <ul id="matchedSkills"></ul>
+
+        <h3>Missing Skills</h3>
+        <ul id="missingSkills"></ul>
+    </div>
+
+    <div class="dashboard-right">
+        <div id="donutChart"></div>
+        <div id="barChart"></div>
+    </div>
+</div> -->
+<!-- MODULE 1 -->
+<div class="dashboard-wrapper" id="module1Section">
+
+    <!-- 1️⃣ TEXT CONTAINER -->
+    <div class="module1-card text-card">
+        <h2 id="jobTitle"></h2>
+        <p><strong>Job Role:</strong> <span id="jobRole"></span></p>
+
+        <h3>Matched Skills</h3>
+        <ul id="matchedSkills"></ul>
+
+        <h3>Missing Skills</h3>
+        <ul id="missingSkills"></ul>
+    </div>
+
+    <!-- 2️⃣ DONUT CHART CONTAINER -->
+    <div class="module1-card chart-card">
+        <div id="donutChart"></div>
+    </div>
+
+    <!-- 3️⃣ BAR CHART CONTAINER -->
+    <div class="module1-card chart-card">
+        <div id="barChart"></div>
+    </div>
+
+</div>
+
+<!-- MODULE 2 -->
+<section id="module2Section">
+    <h2 class="module2-title">Top Recommended Job Roles</h2>
+
+    <div id="module2Cards" class="module2-cards"></div>
+
+    <div class="module2-chart-wrapper">
+        <div id="roleBarChart"></div>
+    </div>
+</section>
+
+<!-- MODULE 3 -->
+<section id="module3Section">
+    <h2>🚫 Resume Rejection Analysis</h2>
+
+    <div class="module3-tabs">
+        <button class="module3-tab active" onclick="showModule3Tab('overview', this)">Overview</button>
+        <button class="module3-tab" onclick="showModule3Tab('reasons', this)">Reasons</button>
+        <button class="module3-tab" onclick="showModule3Tab('charts', this)">Charts</button>
+        <button class="module3-tab" onclick="showModule3Tab('insights', this)">Insights</button>
+    </div>
+
+    <div id="module3Overview" class="module3-tab-panel"></div>
+
+    <div id="module3Reasons" class="module3-tab-panel" style="display:none;"></div>
+
+    <div id="module3Charts" class="module3-tab-panel" style="display:none;">
+    <div id="radarChart"></div>
+    <div id="importanceChart"></div>
+
+    <div id="shapPositiveNote" class="shap-note" style="display:none;"></div>
+    <div id="shapChart"></div>
+</div>
+
+    <div id="module3Insights" class="module3-tab-panel" style="display:none;"></div>
+</section>
+
+<!-- AI INTERVIEWER -->
+<div class="dashboard-bottom">
+    <button class="interview-btn hover-text-btn" onclick="goToAIInterviewer()">
+        <span class="default-text">AI Interviewer</span>
+        <span class="hover-text">Start Mock Interview</span>
+    </button>
+</div>
+
+<script>
+/* ---------- NAVIGATION ---------- */
+
+function goToAIInterviewer() {
+     console.log("Interview button clicked");   // 👈 ADD THIS
+    const context = JSON.parse(localStorage.getItem("interviewContext"));
+
+    // If no context (Module 3 or navbar)
+    if (!context || context.source === "module3") {
+        window.location.href = "/interview";
+        return;
+    }
+
+    // ---------- MODULE 1 ----------
+    if (context.source === "module1") {
+        fetch("/api/interview/context", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                job_role: context.jobRole
+            })
+        }).then(() => {
+            window.location.href = "{{ url_for('interview') }}";
+        });
+    }
+
+    // ---------- MODULE 2 ----------
+    else if (context.source === "module2") {
+        fetch("/api/interview/context", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                roles: context.roles
+            })
+        }).then(() => {
+            window.location.href = "{{ url_for('interview') }}";
+        });
+    }
+}
+
+/* ---------- VISIBILITY CONTROL ---------- */
+function hideAllModules() {
+    document.getElementById("module1Section").style.display = "none";
+    document.getElementById("module2Section").style.display = "none";
+    document.getElementById("module3Section").style.display = "none";
+}
+
+/* ---------- MODULE 1 ---------- */
+function renderModule1(data) {
+    if (!data) return;
+
+    hideAllModules();
+    document.getElementById("module1Section").style.display = "grid";
+
+    document.getElementById("jobRole").innerText = data.job_role;
+    document.getElementById("jobTitle").innerText =
+        "Skill Match Overview – " + data.job_role;
+
+    matchedSkills.innerHTML = "";
+    missingSkills.innerHTML = "";
+
+    data.matched_skills.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        matchedSkills.appendChild(li);
+    });
+
+    data.missing_skills.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = s;
+        missingSkills.appendChild(li);
+    });
+
+    /*Plotly.newPlot("donutChart", [{
+    labels: ["Matched Skills", "Missing Skills"],
+    values: [data.matched_skills.length, data.missing_skills.length],
+    hole: 0.55,
+    type: "pie"
+}], {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    margin: { t: 40, b: 40 }
+});*/
+
+Plotly.newPlot("donutChart", [{
+    labels: ["Matched Skills", "Missing Skills"],
+    values: [data.matched_skills.length, data.missing_skills.length],
+    hole: 0.58,
+    type: "pie",
+    textinfo: "percent",
+    textfont: { size: 18 }
+}], {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    margin: { t: 30, b: 30, l: 20, r: 20 },
+    showlegend: true
+}, {
+    displayModeBar: false,
+    responsive: true
+});
+
+
+   /*Plotly.newPlot("barChart", [{
+    x: ["Matched Skills", "Missing Skills"],
+    y: [data.matched_skills.length, data.missing_skills.length],
+    type: "bar"
+}], {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    margin: { t: 40, b: 40 }
+});
+
+localStorage.setItem("interviewContext", JSON.stringify({
+    source: "module1",
+    jobRole: data.job_role
+}));*/
+
+Plotly.newPlot("barChart", [{
+    x: ["Matched Skills", "Missing Skills"],
+    y: [data.matched_skills.length, data.missing_skills.length],
+
+    type: "bar",
+
+    // ✅ FIX COLORS
+    marker: {
+        color: ["#E67E22", "#2E7DB2"]   // blue, orange
+    },
+
+    // ✅ SHOW VALUES ON TOP
+    text: [
+        data.matched_skills.length,
+        data.missing_skills.length
+    ],
+    textposition: "outside",
+
+}], {
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+
+    // ✅ FIX CUTTING ISSUE
+    margin: { t: 10, b: 20 },
+
+    // ✅ PREVENT CLIPPING
+    yaxis: {
+        automargin: true
+    }
+});
+
+
+}
+
+/* ---------- MODULE 2 ---------- */
+function renderModule2(roleData) {
+    if (!roleData) return;
+
+    hideAllModules();
+    document.getElementById("module2Section").style.display = "block";
+
+    const roles = roleData.map(r => r["Job Role"]);
+    const scores = roleData.map(r => +(r.score * 100).toFixed(1));
+
+    const cardsContainer = document.getElementById("module2Cards");
+
+    const labels = ["Best Match", "Strong Fit", "Good Option"];
+
+    cardsContainer.innerHTML = roleData.map((role, index) => `
+    <div class="module2-role-card">
+        <div class="module2-rank">#${index + 1} • ${labels[index] || "Recommended"}</div>
+        <div class="module2-role-name">${role["Job Role"]}</div>
+        <div class="module2-role-score">${(role.score * 100).toFixed(1)}%</div>
+        <div class="module2-role-label">Resume match score</div>
+
+        <div class="module2-why-title">Why this role suits you</div>
+        <div class="module2-skill-tags">
+            ${
+                role.matched_skills && role.matched_skills.length > 0
+                ? role.matched_skills.map(skill => `<span>${skill}</span>`).join("")
+                : `<span>good skill overlap</span>`
+            }
+        </div>
+    </div>
+`).join("");
+
+    Plotly.newPlot("roleBarChart", [{
+        x: scores,
+        y: roles,
+        orientation: "h",
+        type: "bar",
+        text: scores.map(s => `${s}%`),
+        textposition: "outside",
+        marker: {
+            color: ["#2E7DB2", "#5A4FCF", "#E67E22"]
+        },
+        hovertemplate: "%{y}<br>Match Score: %{x}%<extra></extra>"
+    }], {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        margin: { l: 170, r: 40, t: 30, b: 40 },
+        xaxis: {
+            title: "Match Score (%)",
+            range: [0, Math.max(...scores) + 10],
+            showgrid: true,
+            gridcolor: "rgba(120,120,120,0.12)",
+            zeroline: false
+        },
+        yaxis: {
+            automargin: true,
+            autorange: "reversed"
+        },
+        showlegend: false
+    }, {
+        displayModeBar: false,
+        responsive: true
+    });
+
+    localStorage.setItem("interviewContext", JSON.stringify({
+        source: "module2",
+        roles: roles
+    }));
+}
+
+function showModule3Tab(tabName, clickedButton) {
+    document.getElementById("module3Overview").style.display = "none";
+    document.getElementById("module3Reasons").style.display = "none";
+    document.getElementById("module3Charts").style.display = "none";
+    document.getElementById("module3Insights").style.display = "none";
+
+    document.querySelectorAll(".module3-tab").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    if (tabName === "overview") {
+        document.getElementById("module3Overview").style.display = "block";
+    }
+    if (tabName === "reasons") {
+        document.getElementById("module3Reasons").style.display = "block";
+    }
+    if (tabName === "charts") {
+        document.getElementById("module3Charts").style.display = "block";
+
+        setTimeout(() => {
+            Plotly.Plots.resize("radarChart");
+            Plotly.Plots.resize("importanceChart");
+            Plotly.Plots.resize("shapChart");
+        }, 100);
+    }
+    if (tabName === "insights") {
+        document.getElementById("module3Insights").style.display = "block";
+    }
+
+    if (clickedButton) {
+        clickedButton.classList.add("active");
+    }
+}
+
+/* ---------- MODULE 3 ---------- */
+function renderModule3(data) {
+    if (!data) return;
+
+    hideAllModules();
+    document.getElementById("module3Section").style.display = "block";
+
+    localStorage.setItem("interviewContext", JSON.stringify({
+        source: "module3"
+    }));
+
+    document.getElementById("module3Overview").innerHTML = `
+    <div style="background:#ffffff;padding:30px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
+        <h2 style="text-align:center;margin-bottom:25px;">📌 Final Resume Analysis</h2>
+
+        <div style="display:flex;justify-content:space-around;margin-bottom:30px;font-size:18px;">
+            <div><strong>Selection Probability</strong><br>${data.probability.toFixed(1)}%</div>
+            <div><strong>JD Similarity</strong><br>${data.jd_similarity.toFixed(2)}%</div>
+            <div><strong>Keyword Coverage</strong><br>${data.keyword_coverage.toFixed(2)}%</div>
+        </div>
+
+        <hr style="margin:30px 0;">
+
+        <h3>✅ Matched Keywords</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:25px;">
+            ${data.matched_keywords.map(k =>
+                `<span style="background:#d7f5e5;color:#1f7a4a;padding:6px 12px;border-radius:20px;font-size:14px;">${k}</span>`
+            ).join("")}
+        </div>
+
+        <h3>❌ Missing Keywords</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;">
+            ${data.missing_keywords.map(k =>
+                `<span style="background:#fde2e2;color:#a12b2b;padding:6px 12px;border-radius:20px;font-size:14px;">${k}</span>`
+            ).join("")}
+        </div>
+    </div>
+    `;
+
+    document.getElementById("module3Reasons").innerHTML = `
+    <div style="background:#ffffff;padding:30px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
+
+        <h3>🧠 Why Your Resume Was Weak</h3>
+
+        ${data.reasons.map(r => `
+            <div style="padding:15px;margin-bottom:15px;border-left:6px solid ${
+                r.severity === "HIGH" ? "#d93025" :
+                r.severity === "MEDIUM" ? "#f9ab00" : "#188038"
+            };background:#fafafa;border-radius:6px;">
+                <strong>${r.category}</strong><br>
+                <small>${r.reason}</small><br><br>
+                <strong>Fix:</strong> ${r.fix}
+            </div>
+        `).join("")}
+
+        <hr style="margin:30px 0;">
+
+        <h3>🛣️ Improvement Roadmap</h3>
+
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#f1f3f4;">
+                    <th style="padding:10px;border:1px solid #ddd;">Step</th>
+                    <th style="padding:10px;border:1px solid #ddd;">Priority</th>
+                    <th style="padding:10px;border:1px solid #ddd;">Area</th>
+                    <th style="padding:10px;border:1px solid #ddd;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.roadmap.map(row => `
+                    <tr>
+                        <td style="padding:8px;border:1px solid #ddd;">${row.Step}</td>
+                        <td style="padding:8px;border:1px solid #ddd;">${row.Priority}</td>
+                        <td style="padding:8px;border:1px solid #ddd;">${row.Area}</td>
+                        <td style="padding:8px;border:1px solid #ddd;">${row.Action}</td>
+                    </tr>
+                `).join("")}
+            </tbody>
+        </table>
+    </div>
+    `;
+
+    document.getElementById("module3Insights").innerHTML = `
+    <div style="background:#ffffff;padding:30px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
+        <h3>🧠 Key Model Insights</h3>
+        <ul style="margin-bottom:30px;">
+            ${data.intelligent_insights.map(i => `
+                <li style="margin-bottom:10px;">${i}</li>
+            `).join("")}
+        </ul>
+    </div>
+    `;
+
+    const radar = JSON.parse(data.radar_chart);
+    Plotly.newPlot("radarChart", radar.data, radar.layout, {
+        displayModeBar: false,
+        responsive: true
+    });
+
+    const importance = JSON.parse(data.importance_chart);
+    Plotly.newPlot("importanceChart", importance.data, importance.layout, {
+        displayModeBar: false,
+        responsive: true
+    });
+
+    const shap = JSON.parse(data.shap_chart);
+    Plotly.newPlot("shapChart", shap.data, shap.layout, {
+        displayModeBar: false,
+        responsive: true
+    });
+
+    const shapNote = document.getElementById("shapPositiveNote");
+
+if (data.has_positive_shap) {
+    shapNote.style.display = "none";
+    shapNote.innerText = "";
+} else {
+    shapNote.style.display = "block";
+    shapNote.innerText = "No strong positive feature contributions found for this resume.";
+}
+
+    document.getElementById("module3Overview").style.display = "block";
+    document.getElementById("module3Reasons").style.display = "none";
+    document.getElementById("module3Charts").style.display = "none";
+    document.getElementById("module3Insights").style.display = "none";
+
+    document.querySelectorAll(".module3-tab").forEach(btn => btn.classList.remove("active"));
+    document.querySelector(".module3-tab").classList.add("active");
+}
+
+/* ---------- INIT ---------- */
+document.addEventListener("DOMContentLoaded", function () {
+    const activeModule = localStorage.getItem("activeModule");
+
+    if (activeModule === "module1") {
+        renderModule1(JSON.parse(localStorage.getItem("skillGapResult")));
+    }
+
+    if (activeModule === "module2") {
+        renderModule2(JSON.parse(localStorage.getItem("roleMatchResult")));
+    }
+
+    if (activeModule === "module3") {
+        renderModule3(JSON.parse(localStorage.getItem("rejectionResult")));
+    }
+
+    
+});
+
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+
+</body>
+</html>

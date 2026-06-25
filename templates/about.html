@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='about-style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vujahday+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&family=Vollkorn+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+</head>
+<body class="page-about">
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand"></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About us</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('interview') }}">AI Interviewer</a></li>
+                <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container offerings-section">
+        <h1 class="offerings-title">What Our System Offers</h1>
+        <pre class="sentence3">The platform is built around four core intelligent modules, each addressing a crucial stage of the recruitment lifecycle</pre>
+        <!-- Vision Box -->
+        <div class="vision-box">
+            <h2>Our Vision</h2>
+            <p>
+                Our vision is to empower job seekers with clarity, confidence, and direction,
+                while enabling organizations to make fair, data-backed hiring decisions.
+                We believe that every rejection should offer learning, and every selection
+                should be backed by insight.
+            </p>
+        </div>
+        <div class="modules">
+            <div class="containerm module1">
+                <h2>1. Skill Gap Detection</h1>
+                <p>This module analyzes resumes and compares candidate skills against industry-specific job requirements. It identifies missing skills, proficiency gaps, and recommends personalized upskilling paths to help candidates align better with their desired roles.</p>
+            </div>
+            <div class="containerm module2">
+                <h2 id="right">2. Role Match & Job Fitment Analysis</h1>
+                <p>Using semantic analysis and matching algorithms, this module evaluates how well a candidate’s profile aligns with various job roles. It provides a role-fit score and suggests the most suitable positions based on skills, experience, and domain relevance.</p>
+            </div>
+            <div class="containerm module3">
+                <h2>3. Resume Rejection Reasoning</h1>
+                <p>Instead of generic rejection outcomes, this module delivers explainable AI-driven feedback. It highlights specific factors such as skill mismatch, experience gaps, or keyword relevance that influenced rejection decisions, enabling candidates to improve future applications.</p>
+            </div>
+            <div class="containerm module4">
+                <h2 id="right">4. AI Interviewer</h1>
+                <p>The AI Interviewer simulates real interview scenarios by asking role-specific technical and behavioral questions. It evaluates responses, provides instant feedback, and helps candidates enhance their communication, confidence, and interview readiness.</p>
+            </div>
+            <div class="containerm why">
+                <pre>
+                <h2>Why This Platform Matters:</h2>
+                    ✔ Transparent recruitment insights
+
+                    ✔ Personalized career guidance
+
+                    ✔ Skill-focused improvement recommendations
+
+                    ✔ Reduced bias through data-driven evaluation
+
+                    ✔ Realistic interview preparation experience
+                </pre>
+            </div>
+
+        </div>
+
+
+        </div>
+    </div>
+</body>
+<script>
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+</html>

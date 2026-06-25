@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='module-style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Cream+Soda&family=Vollkorn+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+   
+</head>
+<body class="page-module2">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand"></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About us</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('interview') }}">AI Interviewer</a></li>
+                <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+            </ul>
+
+        </div>
+    </nav>
+   <div class="container">
+    <p class="sentence4">
+        Hi there, this page helps you to identify the perfect role match for your resume
+    </p>
+
+    <form id="gapAnalysisForm">
+
+
+        <!-- Resume upload (clean & correct) -->
+        <label for="resume" class="upload-btn resume-btn">
+            📄 Resume upload
+        </label>
+        <input type="file" id="resume" accept=".pdf,.docx" required hidden>
+
+        <!-- Submit -->
+       <button type="button" class="submit analyze-btn" onclick="analyzeRoleMatch()">
+        Analyze Role Match
+       </button>
+    </form>
+
+    <div id="gapAnalysisResult"></div>
+</div>
+
+    
+
+</body>
+<script>
+async function analyzeRoleMatch() {
+
+    const resumeFile = document.getElementById("resume").files[0];
+
+    if (!resumeFile) {
+        alert("Please upload your resume");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("resume", resumeFile);
+
+    const response = await fetch("/api/role-match", {
+        method: "POST",
+        body: formData
+    });
+
+    const result = await response.json();
+
+    // Save Module-2 result for dashboard
+    localStorage.setItem("activeModule", "module2");
+localStorage.setItem("roleMatchResult", JSON.stringify(result));
+localStorage.removeItem("skillGapResult"); // optional safety
+
+window.location.href = "{{ url_for('dashboard') }}";
+}
+
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+</script>
+
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Interviewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Swash:wght@400;700&family=Akaya+Kanadaka&family=Cherry+Cream+Soda&family=Vollkorn+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        
+        
+        .section { 
+            display: none; 
+            text-align: center; 
+            padding: 2rem; 
+        }
+        .section.active { 
+            display: block; 
+        }
+        button { 
+            background: #373368; 
+            color: white; border: none; 
+            padding: 12px 24px; 
+            border-radius: 25px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        }
+        button:hover { 
+            background: #373368; 
+            transform: translateY(-2px); 
+        }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 10px; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+        }
+        .question { 
+            background: #f7fafc; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 15px; 
+            border-left: 5px solid #373368; 
+        }
+        .score { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: #48bb78; 
+        }
+        .progress { 
+            background: #e2e8f0; 
+            height: 10px; 
+            border-radius: 5px; 
+            margin: 20px 0; 
+            overflow: hidden; 
+        }
+        .progress-bar 
+        { background: #373368; 
+            height: 100%; 
+            transition: width 0.3s; }
+        .summary{ 
+            background: #e6fffa; 
+            padding: 20px; 
+            border-radius: 15px; 
+        }
+        /* .report-shell {
+    max-width: 1100px;
+    margin: 20px auto 40px;
+    background: rgba(255, 248, 248, 0.80);
+    border: 1px solid rgba(55, 51, 104, 0.12);
+    border-radius: 28px;
+    padding: 34px 36px 30px;
+    box-shadow: 0 14px 34px rgba(55, 51, 104, 0.10);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+} */
+
+.report-shell {
+    max-width: 1100px;
+    margin: 20px auto 40px;
+    background: transparent;
+    border: none;
+    border-radius: 28px;
+    padding: 34px 36px 30px;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.report-badge {
+    display: inline-block;
+    background: rgba(55, 51, 104, 0.10);
+    color: #373368;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.report-title {
+    font-size: 40px;
+    color: #2f2f4f;
+    margin-bottom: 8px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.report-subtitle {
+    font-size: 17px;
+    color: #5a5568;
+    margin: 0;
+}
+
+.score-panel {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.score-ring {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background: conic-gradient(#48bb78 0deg, #48bb78 300deg, rgba(72, 187, 120, 0.15) 300deg 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 24px rgba(72, 187, 120, 0.18);
+}
+
+.score-ring-inner {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: #fffaf9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-value {
+    font-size: 42px;
+    font-weight: 800;
+    color: #2f2f4f;
+    line-height: 1;
+}
+
+.score-label {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.score-side {
+    display: grid;
+    gap: 18px;
+}
+
+.score-card {
+    /* background: rgba(255, 255, 255, 0.72); */
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(55, 51, 104, 0.08);
+    border-radius: 18px;
+    padding: 18px 20px;
+    text-align: left;
+}
+
+.score-card-label {
+    display: block;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.score-card-value {
+    font-size: 24px;
+    color: #373368;
+    font-weight: 700;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+.report-card {
+    /* background: rgba(255, 255, 255, 0.72); */
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(55, 51, 104, 0.08);
+    border-radius: 20px;
+    padding: 22px 24px;
+    text-align: left;
+}
+
+.report-card h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 24px;
+    color: #373368;
+}
+
+.report-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.report-list li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 12px;
+    color: #374151;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.report-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #373368;
+    font-weight: bold;
+}
+
+.warning-card {
+    border: 1px solid rgba(217, 48, 37, 0.18);
+    background: rgba(254, 242, 242, 0.9);
+    margin-bottom: 20px;
+}
+
+.warning-card h3 {
+    color: #b91c1c;
+}
+
+.report-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 900px) {
+    .score-panel,
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-title {
+        font-size: 32px;
+    }
+}
+    </style> 
+</head>
+<body class="page-interview">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand"></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('interview') }}" onclick="clearInterviewContext()">AI Interviewer</a></li>
+                <li class="user-menu">
+  {% if first_name %}
+    <button type="button" class="user-circle" onclick="toggleUserMenu(event)">
+      {{ first_name[0] | upper }}
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+      <div class="user-name">{{ first_name }}</div>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+  {% endif %}
+</li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Job Role Selection -->
+        <section id="select-role" class="section active">
+            <h1 style="font-family: 'Times New Roman', Times, serif; color: #373368;">🤖 AI Technical Interview</h1>
+            <p>Select your job role to start:</p>
+            <select id="job-role">
+                <option value="">Choose a role...</option>
+            </select>
+            <select id="mode">
+    <option value="">Select Mode</option>
+    <option value="basic">Basic (Technical)</option>
+    <option value="intermediate">Intermediate (Technical)</option>
+    <option value="hard">Hard (Technical)</option>
+    <option value="hr">HR (HR / Behavioral)</option>
+</select>
+            <div id="module2-role-buttons" style="margin-top:20px;"></div>
+            <br>
+            <button onclick="startInterview()">🚀 Start Interview</button>
+        </section>
+
+        <!-- Skills Preview -->
+        <section id="skills-preview" class="section">
+            <h2>Key Skills for <span id="preview-role"></span></h2>
+            <div id="skills-list"></div>
+            <button onclick="showQuestions()">Next: Questions</button>
+        </section>
+
+        <!-- Interview Questions -->
+        <section id="interview" class="section">
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <h2>Question <span id="q-index">1</span> of <span id="total-questions"></span></h2>
+            <div id="current-question" class="question"></div>
+            <textarea id="answer" placeholder="Type your answer here..." rows="6"></textarea>
+            <br>
+            <button onclick="submitAnswer()" style="background: #48bb78;">Submit Answer</button>
+            <button onclick="nextQuestion()" style="background: #ed8936;">Skip</button>
+        </section>
+
+        <!-- Results Summary -->
+        <section id="results" class="section">
+    <div class="report-shell">
+        <div class="report-header">
+            <div class="report-badge">🎉 Interview Complete</div>
+            <h2 class="report-title">Your AI Interview Report</h2>
+            <p class="report-subtitle">
+                A clean summary of your interview performance, strengths, and improvements.
+            </p>
+        </div>
+
+        <div class="score-panel">
+            <div class="score-ring" id="score-ring">
+                <div class="score-ring-inner">
+                    <span id="avg-score" class="score-value">--</span>
+                    <span class="score-label">Overall Score</span>
+                </div>
+            </div>
+
+            <div class="score-side">
+                <div class="score-card">
+                    <span class="score-card-label">Interview Role</span>
+                    <span id="report-role" class="score-card-value">--</span>
+                </div>
+                <div class="score-card">
+                    <span class="score-card-label">Performance</span>
+                    <span id="performance-label" class="score-card-value">--</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-grid">
+            <div class="report-card">
+                <h3>✅ Strengths</h3>
+                <ul id="strengths-list" class="report-list"></ul>
+            </div>
+
+            <div class="report-card">
+                <h3>📌 Recommendations</h3>
+                <ul id="recommendations-list" class="report-list"></ul>
+            </div>
+        </div>
+
+        <div id="cheating-box" class="report-card warning-card hidden">
+            <h3>⚠️ Interview Flags</h3>
+            <ul id="cheating-list" class="report-list"></ul>
+        </div>
+
+        <div class="report-actions">
+            <button onclick="restartInterview()">New Interview</button>
+            <button onclick="downloadReport()">📥 Download Report</button>
+        </div>
+    </div>
+</section>
+    </div>
+
+    <script>
+    
+    let interviewContext = JSON.parse(localStorage.getItem("interviewContext"));
+    let currentQuestionIndex = 0;
+    let questions = [];
+    let answers = [];
+    let jobRole = "";
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+    if (!interviewContext) return;
+
+    const roleSelect = document.getElementById("job-role");
+    const startBtn = document.querySelector("#select-role button");
+
+    // ===== MODULE 1 & MODULE 3 =====
+    if (interviewContext.source === "module1") {
+
+        jobRole = interviewContext.jobRole || interviewContext.jdRole || interviewContext.role;
+
+        // hide dropdown
+        roleSelect.style.display = "none";
+
+        // show role text
+        const roleText = document.createElement("p");
+        roleText.innerHTML = `<strong>Interview Role:</strong> ${jobRole}`;
+        roleSelect.parentNode.insertBefore(roleText, roleSelect);
+
+        localStorage.removeItem("interviewContext");
+    }
+
+    // ===== MODULE 2 =====
+    if (interviewContext.source === "module2") {
+
+        roleSelect.style.display = "none";
+
+        const container = document.getElementById("module2-role-buttons");
+        container.innerHTML = "<h3>Select Your Interview Role:</h3>";
+
+        interviewContext.roles.forEach(role => {
+            const btn = document.createElement("button");
+            btn.innerText = role;
+            btn.style.margin = "10px";
+            btn.onclick = () => {
+    jobRole = role;
+    document.querySelectorAll("#module2-role-buttons button")
+        .forEach(b => b.style.background = "#373368");
+    btn.style.background = "#48bb78"; // visual selection
+};
+            container.appendChild(btn);
+        });
+    }
+});
+
+function clearInterviewContext() {
+    localStorage.removeItem("interviewContext");
+}
+
+    // 🔹 Load job roles for navbar usage
+    fetch('/api/job-roles')
+        .then(r => r.json())
+        .then(roles => {
+            const select = document.getElementById('job-role');
+            roles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role;
+                option.textContent = role;
+                select.appendChild(option);
+            });
+        });
+
+    // ==========================================================
+    // START INTERVIEW
+    // ==========================================================
+
+    // function startInterview() {
+
+    // const selectedRole = jobRole || document.getElementById("job-role").value;
+    // const mode = document.getElementById("mode").value;
+    function startInterview() {
+
+    const selectedRole = jobRole || document.getElementById("job-role").value;
+    const mode = document.getElementById("mode").value;
+
+    jobRole = selectedRole;
+
+    if (!selectedRole) {
+        alert("Please select a job role");
+        return;
+    }
+
+    if (!mode) {
+        alert("Please select mode");
+        return;
+    }
+
+    fetch("/api/interview/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            job_role: selectedRole,
+            mode: mode
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        currentQuestionIndex = 0;
+
+        document.getElementById("select-role").classList.remove("active");
+        document.getElementById("interview").classList.add("active");
+
+        document.getElementById("total-questions").textContent = 10;
+        document.getElementById("current-question").textContent = data.question;
+        document.getElementById("q-index").textContent = 1;
+        document.getElementById("progress-bar").style.width = "10%";
+        document.getElementById("answer").value = "";
+    });
+}
+
+    function startInterviewWithRole(role) {
+
+    jobRole = role;
+    localStorage.removeItem("interviewContext");
+
+    fetch('/api/interview/start', {
+        method: 'POST',
+        body: new URLSearchParams({
+            job_role: jobRole
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+
+        skills = data.skills;
+        questions = data.questions;
+
+        document.getElementById('select-role').classList.remove('active');
+        document.getElementById('skills-preview').classList.add('active');
+        document.getElementById('preview-role').textContent = jobRole;
+
+        document.getElementById('skills-list').innerHTML =
+            skills.map(s =>
+                `<p>• ${s.name} (${s.proficiency})</p>`
+            ).join('');
+    });
+}
+
+
+    // ==========================================================
+    // SHOW QUESTIONS
+    // ==========================================================
+
+
+
+    // ==========================================================
+    // LOAD QUESTION
+    // ==========================================================
+
+    
+    // ==========================================================
+    // SUBMIT ANSWER
+    // ==========================================================
+
+    function submitAnswer() {
+    const answer = document.getElementById("answer").value.trim();
+    if (!answer) {
+        alert("Please type an answer");
+        return;
+    }
+
+    fetch("/api/interview/next", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            action: "submit",
+            answer: answer
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        // 🛑 STOP EVERYTHING IF DONE
+        if (data.done) {
+            finishInterview();
+            return;
+        }
+
+        currentQuestionIndex++;
+
+        document.getElementById("current-question").textContent = data.question;
+        document.getElementById("q-index").textContent = currentQuestionIndex + 1;
+        document.getElementById("progress-bar").style.width =
+            `${((currentQuestionIndex + 1) / 10) * 100}%`;
+        document.getElementById("answer").value = "";
+    });
+}
+    // ==========================================================
+    // NEXT QUESTION
+    // ==========================================================
+
+    function nextQuestion() {
+    fetch("/api/interview/next", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            action: "skip"
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        // 🛑 STOP EVERYTHING IF DONE
+        if (data.done) {
+            finishInterview();
+            return;
+        }
+
+        currentQuestionIndex++;
+
+        document.getElementById("current-question").textContent = data.question;
+        document.getElementById("q-index").textContent = currentQuestionIndex + 1;
+        document.getElementById("progress-bar").style.width =
+            `${((currentQuestionIndex + 1) / 10) * 100}%`;
+        document.getElementById("answer").value = "";
+    });
+}
+
+    // ==========================================================
+    // FINISH INTERVIEW
+    // ==========================================================
+     function finishInterview() {
+    document.getElementById("avg-score").textContent = "...";
+
+    fetch("/api/interview/feedback")
+        .then(res => res.json())
+        .then(data => {
+            const score = Number(data.final_score || 0);
+            const report = data.final_report || "";
+
+            document.getElementById("avg-score").textContent = score;
+            document.getElementById("report-role").textContent = jobRole || "Selected Role";
+
+            let performance = "Needs Improvement";
+            if (score >= 85) performance = "Excellent";
+            else if (score >= 70) performance = "Strong";
+            else if (score >= 55) performance = "Average";
+
+            document.getElementById("performance-label").textContent = performance;
+
+            const ring = document.getElementById("score-ring");
+            const degrees = Math.max(0, Math.min(360, (score / 100) * 360));
+            ring.style.background =
+                `conic-gradient(#48bb78 0deg, #48bb78 ${degrees}deg, rgba(72, 187, 120, 0.15) ${degrees}deg 360deg)`;
+
+            function extractBullets(sectionTitle, fallbackTitle = null) {
+                const titles = fallbackTitle ? [sectionTitle, fallbackTitle] : [sectionTitle];
+
+                for (const title of titles) {
+                    const regex = new RegExp(`${title}:([\\s\\S]*?)(?:\\n[A-Z][A-Za-z ]+:|$)`, "i");
+                    const match = report.match(regex);
+
+                    if (match && match[1]) {
+                        const lines = match[1]
+                            .split("\n")
+                            .map(line => line.replace(/^[-*•\\s]+/, "").trim())
+                            .filter(line => line.length > 0);
+
+                        if (lines.length) return lines;
+                    }
+                }
+                return [];
+            }
+
+            let strengths = extractBullets("Strengths");
+            let recommendations = extractBullets("Suggestions", "Recommendation");
+
+            if (!strengths.length) {
+                strengths = [
+                    "You completed the interview flow successfully.",
+                    "Your responses showed effort and role awareness."
+                ];
+            }
+
+            if (!recommendations.length) {
+                recommendations = [
+                    "Make your answers more structured.",
+                    "Use clearer examples from projects or experience."
+                ];
+            }
+
+            // document.getElementById("strengths-list").innerHTML =
+            //     strengths.map(item => `<li>${item}</li>`).join("");
+
+            // document.getElementById("recommendations-list").innerHTML =
+            //     recommendations.map(item => `<li>${item}</li>`).join("");
+            document.getElementById("strengths-list").innerHTML =
+                strengths.map(item => `<li>${item.replace(/^[\*\-\•\s]+/, "").trim()}</li>`).join("");
+
+            document.getElementById("recommendations-list").innerHTML =
+                recommendations.map(item => `<li>${item.replace(/^[\*\-\•\s]+/, "").trim()}</li>`).join("");
+
+            const cheatingBox = document.getElementById("cheating-box");
+            const cheatingList = document.getElementById("cheating-list");
+
+            if (data.cheating_flags && data.cheating_flags.length > 0) {
+                cheatingBox.classList.remove("hidden");
+                cheatingList.innerHTML = data.cheating_flags.map(flag => `<li>${flag}</li>`).join("");
+            } else {
+                cheatingBox.classList.add("hidden");
+                cheatingList.innerHTML = "";
+            }
+
+            document.getElementById("interview").classList.remove("active");
+            document.getElementById("results").classList.add("active");
+        });
+}
+
+    // ==========================================================
+    // RESTART
+    // ==========================================================
+
+    function restartInterview() {
+        location.reload();
+    }
+
+    // ==========================================================
+    // DOWNLOAD REPORT
+    // ==========================================================
+
+    function downloadReport() {
+
+        const report = {
+            jobRole: jobRole,
+            avgScore: document.getElementById('avg-score').textContent,
+            answers: answers
+        };
+
+        const blob = new Blob(
+            [JSON.stringify(report, null, 2)],
+            { type: 'application/json' }
+        );
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `interview-${jobRole}-${Date.now()}.json`;
+        a.click();
+    }
+
+function toggleUserMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+    }
+}
+
+document.addEventListener("click", function () {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) {
+        dropdown.classList.remove("show");
+    }
+});
+
+</script>
+
+</body>
+</html>

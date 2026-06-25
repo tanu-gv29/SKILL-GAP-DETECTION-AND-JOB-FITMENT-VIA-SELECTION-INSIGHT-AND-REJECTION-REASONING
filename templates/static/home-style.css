@@ -1,0 +1,65 @@
+.sentence {
+    font-family: "Vollkorn SC";
+    font-weight: bold;
+    font-size: 25px;
+    /* ADD THIS: Increase space below the sentence */
+    /* margin-top: -40px; */
+    margin-bottom: 50px; 
+}
+.sentence2 {
+    font-family: "Harlow Solid Italic";
+    font-size: 25px;
+    margin-bottom: 40px;
+    /* margin-top: -20px; */
+    color: #373368;
+    display: block;        /* IMPORTANT */
+    width: 100%;           /* IMPORTANT */
+    text-align: right;
+}
+.images {
+    position: absolute;
+    bottom: 80px;                 /* lifts buttons above bottom */
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 100px;
+}
+
+/* Image button */
+.img-btn {
+    position: absolute;   /* 🔑 REQUIRED */
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Image inside button */
+.img-btn img {
+    width: 200px;                 /* adjust if needed */
+    height: auto;
+    /* transition: transform 0.3s ease, filter 0.3s ease; */
+}
+
+/* Hover effect */
+.img-btn img:hover {
+    transform: scale(1.08);
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.3));
+}
+#btn1 {
+    top: -400px;
+    left: 10%;
+    z-index: 1;
+}
+
+#btn2 {
+    top: -250px;
+    left: 30%;
+    z-index: 2;   /* 🔼 comes on top */
+}
+
+#btn3 {
+    top: -100px;
+    left: 50%;
+    z-index: 3;
+}
